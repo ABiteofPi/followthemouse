@@ -2,11 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Or your default branch name
+    branches: ["main"]
 
-# Set permissions for the GITHUB_TOKEN
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,6 +25,40 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Automated Version Bump
+        id: version_bump
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MSG"
+
+          DO_DEPLOY="false"
+
+          if [[ "$COMMIT_MSG" == feat:* ]]; then
+            echo "Feature detected. Bumping Minor version..."
+            npm version minor -m "chore(release): %s [skip ci]"
+            DO_DEPLOY="true"
+            
+          elif [[ "$COMMIT_MSG" == fix:* ]]; then
+            echo "Fix detected. Bumping Patch version..."
+            npm version patch -m "chore(release): %s [skip ci]"
+            DO_DEPLOY="true"
+
+          elif [[ "$COMMIT_MSG" == chore:* ]]; then
+            echo "Chore detected. Bumping Patch version (No Deploy)..."
+            npm version patch -m "chore(release): %s [skip ci]"
+            DO_DEPLOY="false"
+
+          else
+            echo "No relevant commit tag found. Skipping version bump."
+          fi
+
+          git push --follow-tags
+
+          echo "deploy=$DO_DEPLOY" >> $GITHUB_OUTPUT
+
       - name: Build project
         run: npm run build
 
@@ -36,4 +69,5 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        if: steps.version_bump.outputs.deploy == 'true'
         uses: actions/deploy-pages@v4
