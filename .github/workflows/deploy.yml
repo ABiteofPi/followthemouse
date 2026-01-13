@@ -31,31 +31,47 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          echo "Commit message: $COMMIT_MSG"
+          git fetch --tags
 
-          DO_DEPLOY="false"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
-          if [[ "$COMMIT_MSG" == feat:* ]]; then
-            echo "Feature detected. Bumping Minor version..."
-            npm version minor -m "chore(release): %s [skip ci]"
-            DO_DEPLOY="true"
-            
-          elif [[ "$COMMIT_MSG" == fix:* ]]; then
-            echo "Fix detected. Bumping Patch version..."
-            npm version patch -m "chore(release): %s [skip ci]"
-            DO_DEPLOY="true"
-
-          elif [[ "$COMMIT_MSG" == chore:* ]]; then
-            echo "Chore detected. Bumping Patch version (No Deploy)..."
-            npm version patch -m "chore(release): %s [skip ci]"
-            DO_DEPLOY="false"
-
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tags found. Scanning full history..."
+            COMMIT_LOGS=$(git log --pretty=%B)
           else
-            echo "No relevant commit tag found. Skipping version bump."
+            echo "Last tag was $LAST_TAG. Scanning commits since then..."
+            COMMIT_LOGS=$(git log $LAST_TAG..HEAD --pretty=%B)
           fi
 
-          git push --follow-tags
+          echo "--- Changes to Analyze ---"
+          echo "$COMMIT_LOGS"
+          echo "--------------------------"
+
+          DO_DEPLOY="false"
+          BUMP_TYPE="none"
+
+          if echo "$COMMIT_LOGS" | grep -q "^feat:"; then
+            echo "Found a Feature! Bumping Minor..."
+            BUMP_TYPE="minor"
+            DO_DEPLOY="true"
+          
+          elif echo "$COMMIT_LOGS" | grep -q "^fix:"; then
+            echo "Found a Fix! Bumping Patch..."
+            BUMP_TYPE="patch"
+            DO_DEPLOY="true"
+
+          elif echo "$COMMIT_LOGS" | grep -q "^chore:"; then
+            echo "Found Chores only. Bumping Patch (No Deploy)..."
+            BUMP_TYPE="patch"
+            DO_DEPLOY="false"
+          else
+            echo "No relevant commit tags (feat/fix/chore) found in this batch."
+          fi
+
+          if [ "$BUMP_TYPE" != "none" ]; then
+            npm version $BUMP_TYPE --force -m "chore(release): %s [skip ci]"
+            git push --follow-tags
+          fi
 
           echo "deploy=$DO_DEPLOY" >> $GITHUB_OUTPUT
 
