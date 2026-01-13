@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: CI/CD Pipeline
 
 on:
   push:
@@ -8,9 +8,11 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
+  pull-requests: write
 
 jobs:
-  build_and_deploy:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,55 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Automated Version Bump
-        id: version_bump
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-          git fetch --tags
-
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-
-          if [ -z "$LAST_TAG" ]; then
-            echo "No previous tags found. Scanning full history..."
-            COMMIT_LOGS=$(git log --pretty=%B)
-          else
-            echo "Last tag was $LAST_TAG. Scanning commits since then..."
-            COMMIT_LOGS=$(git log $LAST_TAG..HEAD --pretty=%B)
-          fi
-
-          echo "--- Changes to Analyze ---"
-          echo "$COMMIT_LOGS"
-          echo "--------------------------"
-
-          DO_DEPLOY="false"
-          BUMP_TYPE="none"
-
-          if echo "$COMMIT_LOGS" | grep -q "^feat:"; then
-            echo "Found a Feature! Bumping Minor..."
-            BUMP_TYPE="minor"
-            DO_DEPLOY="true"
-          
-          elif echo "$COMMIT_LOGS" | grep -q "^fix:"; then
-            echo "Found a Fix! Bumping Patch..."
-            BUMP_TYPE="patch"
-            DO_DEPLOY="true"
-
-          elif echo "$COMMIT_LOGS" | grep -q "^chore:"; then
-            echo "Found Chores only. Bumping Patch (No Deploy)..."
-            BUMP_TYPE="patch"
-            DO_DEPLOY="false"
-          else
-            echo "No relevant commit tags (feat/fix/chore) found in this batch."
-          fi
-
-          if [ "$BUMP_TYPE" != "none" ]; then
-            npm version $BUMP_TYPE --force -m "chore(release): %s [skip ci]"
-            git push --follow-tags
-          fi
-
-          echo "deploy=$DO_DEPLOY" >> $GITHUB_OUTPUT
+      - name: Run Tests
+        run: npm run test
 
       - name: Build project
         run: npm run build
@@ -81,9 +36,45 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Vite's default output folder
+          path: './dist'
+        
+  release:
+    name: Semantic Release
+    needs: ci
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [ci, release]
+    if: needs.release.outputs.new_release_published == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        if: steps.version_bump.outputs.deploy == 'true'
         uses: actions/deploy-pages@v4
