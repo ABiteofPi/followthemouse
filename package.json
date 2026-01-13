@@ -1,6 +1,6 @@
 {
   "name": "vue-project",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "type": "module",
   "engines": {
@@ -56,19 +56,30 @@
     "vue-tsc": "^3.2.2"
   },
   "release": {
-  "branches": ["main"],
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/changelog",
-    ["@semantic-release/npm", {
-      "npmPublish": false
-    }],
-    ["@semantic-release/git", {
-      "assets": ["package.json", "CHANGELOG.md"],
-      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-    }],
-    "@semantic-release/github"
-  ]
-}
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  }
 }
