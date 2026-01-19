@@ -1,3 +1,16 @@
+# [0.1.0](https://github.com/ABiteofPi/followthemouse/compare/v0.0.4...v0.1.0) (2026-01-18)
+
+
+### Bug Fixes
+
+* updated vitest ([a49cdf6](https://github.com/ABiteofPi/followthemouse/commit/a49cdf62b43cbfe0a899972ce5dd4b8a0d10bb10))
+* updated vitest ([4292f59](https://github.com/ABiteofPi/followthemouse/commit/4292f5910b0d02d54eedf2b4cd949a2500891f8e))
+
+
+### Features
+
+* added routing ([ae32995](https://github.com/ABiteofPi/followthemouse/commit/ae32995e0b2da6a911983dce8f5cc3753b589292))
+
 ## [0.0.4](https://github.com/ABiteofPi/followthemouse/compare/v0.0.3...v0.0.4) (2026-01-13)
 
 
