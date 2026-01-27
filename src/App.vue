@@ -6,9 +6,4 @@
   </div>
 </template>
 
-<style scoped>
-.body {
-  height: 100vh;
-  width: 100vw;
-}
-</style>
+<style scoped></style>
