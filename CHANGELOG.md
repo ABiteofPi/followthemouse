@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/ABiteofPi/followthemouse/compare/v0.1.3...v0.2.0) (2026-01-27)
+
+
+### Features
+
+* initial logic + updated styles ([f4e11de](https://github.com/ABiteofPi/followthemouse/commit/f4e11de98de72c4ba4f7601434582c444b8fedf4))
+
 ## [0.1.3](https://github.com/ABiteofPi/followthemouse/compare/v0.1.2...v0.1.3) (2026-01-27)
 
 
