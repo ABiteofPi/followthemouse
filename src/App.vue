@@ -1,7 +1,14 @@
 <script setup lang="ts"></script>
 
 <template>
-  <RouterView />
+  <div class="body">
+    <RouterView />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.body {
+  height: 100vh;
+  width: 100vw;
+}
+</style>
