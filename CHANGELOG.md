@@ -1,3 +1,10 @@
+## [0.1.3](https://github.com/ABiteofPi/followthemouse/compare/v0.1.2...v0.1.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* page layout ([06cb819](https://github.com/ABiteofPi/followthemouse/commit/06cb8198823553cb7f4c32de620d329d63859dfa))
+
 ## [0.1.2](https://github.com/ABiteofPi/followthemouse/compare/v0.1.1...v0.1.2) (2026-01-19)
 
 
