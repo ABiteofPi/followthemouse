@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { analyzePassword } from '../types/logic';
 
 const password = ref('');
+const showPassword = ref(false);
 const result = computed(() => analyzePassword(password.value));
 
 const strengthColor = computed(() => {
@@ -20,7 +21,14 @@ const strengthColor = computed(() => {
   <div class="d-flex flex-column align-items-center h-100 py-5">
     <h1 class="my-5 doto title px-5">Password Strength Meter</h1>
     <div class="d-flex flex-column gap-2 mt-5">
-      <input v-model="password" type="password" class="input" :class="strengthColor" placeholder="Type a password..." />
+      <div class="password-input-wrapper">
+        <input v-model="password" :type="showPassword ? 'text' : 'password'" class="input" :class="strengthColor"
+          placeholder="Type a password..." />
+        <button type="button" class="visibility-toggle" @click="showPassword = !showPassword"
+          :aria-label="showPassword ? 'Hide password' : 'Show password'">
+          <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+        </button>
+      </div>
 
       <p class="doto px-4 py-2 mb-2 align-self-center">Strength: <strong :class="strengthColor">{{ result.level
       }}</strong></p>
@@ -46,6 +54,37 @@ const strengthColor = computed(() => {
   text-shadow: 0 4px 25px rgba(255, 255, 255, 0.3), 0 0px 7px rgba(255, 255, 255, 0.2), 0 4px 50px rgba(255, 255, 255, 0.1);
 }
 
+.password-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.visibility-toggle {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.visibility-toggle:hover {
+  color: #ccc;
+}
+
+.visibility-toggle:focus {
+  outline: none;
+  color: #fff;
+}
+
 .input {
   padding: 15px 30px;
   font-size: 20px;
@@ -58,19 +97,21 @@ const strengthColor = computed(() => {
   transition: background 0.4s ease;
   transition: border 0.3s ease;
   transition: box-shadow 0.1s ease;
-
-  &:hover {
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.0);
-    background-color: #0e011f;
-  }
-
-  &:focus-visible {
-    outline: none;
-    border: 1px solid #cccccc8a;
-    box-shadow: 0 2px 25px rgba(255, 255, 255, 0.1);
-    background-color: #0e011f;
-  }
+  padding-right: 50px;
 }
+
+&:hover {
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.0);
+  background-color: #0e011f;
+}
+
+&:focus-visible {
+  outline: none;
+  border: 1px solid #cccccc8a;
+  box-shadow: 0 2px 25px rgba(255, 255, 255, 0.1);
+  background-color: #0e011f;
+}
+
 
 .too-weak {
   color: #ff4d4d;
