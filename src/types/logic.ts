@@ -11,9 +11,12 @@ export function analyzePassword(password: string): StrengthResult {
   const feedback: string[] = []
 
   if (!password) return { score: 0, level: 'Too Weak', feedback: ['Please enter a password'] }
+
   if (password.length >= 8) score += 20
-  if (password.length >= 20) score += 20
-  else feedback.push('Password is too short. Cosider using at least 8 characters.')
+  else feedback.push('Password is too short. Consider using at least 16 characters.')
+
+  if (password.length >= 16) score += 20
+  else feedback.push('Consider using at least 16 characters.')
 
   if (/[A-Z]/.test(password)) score += 15
   else feedback.push('Add uppercase letters to strengthen your password.')

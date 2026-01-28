@@ -14,7 +14,6 @@ const strengthColor = computed(() => {
   if (result.value.level === 'Very Strong') return 'very-strong'
   return ''
 });
-
 </script>
 
 <template>
