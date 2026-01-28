@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/ABiteofPi/followthemouse/compare/v0.3.1...v0.3.2) (2026-01-28)
+
+
+### Bug Fixes
+
+* password visbility toggle added ([2426001](https://github.com/ABiteofPi/followthemouse/commit/2426001717c0cde243a60056a91c984ced6febc6))
+
 ## [0.3.1](https://github.com/ABiteofPi/followthemouse/compare/v0.3.0...v0.3.1) (2026-01-28)
 
 
