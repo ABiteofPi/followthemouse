@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/ABiteofPi/password-strength-meter/compare/v0.3.3...v0.3.4) (2026-01-28)
+
+
+### Bug Fixes
+
+* updated title and favicon ([da3fba2](https://github.com/ABiteofPi/password-strength-meter/commit/da3fba24e751ac04199f5da26d709779eeaa6d92))
+
 ## [0.3.3](https://github.com/ABiteofPi/password-strength-meter/compare/v0.3.2...v0.3.3) (2026-01-28)
 
 
