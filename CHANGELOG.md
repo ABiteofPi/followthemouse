@@ -1,3 +1,11 @@
+## [0.3.3](https://github.com/ABiteofPi/password-strength-meter/compare/v0.3.2...v0.3.3) (2026-01-28)
+
+
+### Bug Fixes
+
+* changed repo name ([38cf280](https://github.com/ABiteofPi/password-strength-meter/commit/38cf2803c418e73579f82c2361813b44a3877d0e))
+* fiexd styling issue ([a4d3812](https://github.com/ABiteofPi/password-strength-meter/commit/a4d38122d9ab7aac2dec0ac81d20269eec67df70))
+
 ## [0.3.2](https://github.com/ABiteofPi/followthemouse/compare/v0.3.1...v0.3.2) (2026-01-28)
 
 
