@@ -97,19 +97,18 @@ const strengthColor = computed(() => {
   transition: background 0.4s ease;
   transition: border 0.3s ease;
   transition: box-shadow 0.1s ease;
-  padding-right: 50px;
-}
 
-&:hover {
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.0);
-  background-color: #0e011f;
-}
+  &:hover {
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.0);
+    background-color: #0e011f;
+  }
 
-&:focus-visible {
-  outline: none;
-  border: 1px solid #cccccc8a;
-  box-shadow: 0 2px 25px rgba(255, 255, 255, 0.1);
-  background-color: #0e011f;
+  &:focus-visible {
+    outline: none;
+    border: 1px solid #cccccc8a;
+    box-shadow: 0 2px 25px rgba(255, 255, 255, 0.1);
+    background-color: #0e011f;
+  }
 }
 
 
